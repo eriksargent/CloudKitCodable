@@ -179,7 +179,9 @@ extension _CloudKitRecordEncoder.KeyedContainer: KeyedEncodingContainerProtocol 
             throw CloudKitRecordEncodingError.referencesNotSupported(key.stringValue)
         } else if value is [CustomCloudKitEncodable] {
             throw CloudKitRecordEncodingError.referencesNotSupported(key.stringValue)
-        } else if let ckValue = value as? CKRecordValue {
+		} else if let referenceValue = value as? CKReferenceCoder, let zoneID = zoneID {
+			return CKRecord.Reference(recordID: referenceValue.id(in: zoneID), action: .deleteSelf)
+		} else if let ckValue = value as? CKRecordValue {
             return ckValue
         } else {
             throw CloudKitRecordEncodingError.unsupportedValueForKey(key.stringValue)

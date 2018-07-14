@@ -22,10 +22,6 @@ extension CloudKitRecordRepresentable {
     public var cloudKitRecordType: String {
         return String(describing: type(of: self))
     }
-
-    public var cloudKitIdentifier: String {
-        return UUID().uuidString
-    }
 }
 
 public protocol CustomCloudKitEncodable: CloudKitRecordRepresentable & Encodable {
@@ -37,3 +33,20 @@ public protocol CustomCloudKitDecodable: CloudKitRecordRepresentable & Decodable
 }
 
 public protocol CustomCloudKitCodable: CustomCloudKitEncodable & CustomCloudKitDecodable { }
+
+
+struct CKReferenceCoder: Codable {
+	var recordName: String
+	
+	init(with name: String) {
+		recordName = name
+	}
+	
+	init(from reference: CKRecord.Reference) {
+		recordName = reference.recordID.recordName
+	}
+	
+	func id(in zone: CKRecordZone.ID) -> CKRecord.ID {
+		return CKRecord.ID(recordName: recordName, zoneID: zone)
+	}
+}

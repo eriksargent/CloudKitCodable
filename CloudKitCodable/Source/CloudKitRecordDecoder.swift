@@ -134,6 +134,10 @@ extension _CloudKitRecordDecoder.KeyedContainer: KeyedDecodingContainerProtocol 
         if type == URL.self {
             return try decodeURL(forKey: key) as! T
         }
+		
+		if type == CKRecord.Reference.self, let value = record[key.stringValue] as? CKRecord.Reference {
+			return CKReferenceCoder(from: value) as! T
+		}
 
         guard let value = record[key.stringValue] as? T else {
             let context = DecodingError.Context(codingPath: codingPath, debugDescription: "CKRecordValue couldn't be converted to \(String(describing: type))'")
