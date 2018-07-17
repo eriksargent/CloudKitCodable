@@ -135,7 +135,7 @@ extension _CloudKitRecordDecoder.KeyedContainer: KeyedDecodingContainerProtocol 
             return try decodeURL(forKey: key) as! T
         }
 		
-		if type == CKRecord.Reference.self, let value = record[key.stringValue] as? CKRecord.Reference {
+		if type == CKReferenceCoder.self, let value = record[key.stringValue] as? CKRecord.Reference {
 			return CKReferenceCoder(from: value) as! T
 		}
 
